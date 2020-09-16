@@ -6,11 +6,13 @@ library(lubridate)
 covid19.dir <- "~/Desktop/covid19/"
 setwd(covid19.dir)
 
-get.data <- function(){
+get.data <- function(download=FALSE){
   # Download the current data
-  nytimes.state.cv <- download.file("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv",paste0(covid19.dir,"covid19.csv"),method="curl")
-  nytimes.county.cv <- download.file("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv",paste0(covid19.dir,"covid19-counties.csv"),method="curl")
-  #rt.live <- download.file("https://d14wlfuexuxgcm.cloudfront.net/covid/rt.csv","rt.csv",method="curl")
+  if(download){
+    nytimes.state.cv <- download.file("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv",paste0(covid19.dir,"covid19.csv"),method="curl")
+    nytimes.county.cv <- download.file("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv",paste0(covid19.dir,"covid19-counties.csv"),method="curl")
+    #rt.live <- download.file("https://d14wlfuexuxgcm.cloudfront.net/covid/rt.csv","rt.csv",method="curl")
+  }
   
   # Set up the data
   covid19.s <- read.csv(paste0(covid19.dir,"covid19.csv"))
@@ -89,8 +91,8 @@ data.check <- function(){
   file.date <- substr(as.character(file.mtime(paste0(covid19.dir,"covid19.csv"))),1,10)
   if (file.date < cur.date){
     print("Getting new data")
-    get.data()
-  }
+    get.data(download=TRUE)
+  } else get.data()
 }
 
 plot.state <- function(state.name){
