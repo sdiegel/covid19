@@ -1,10 +1,11 @@
 #covid.r
 #-------
 # Set things up
+covid19.dir <- "~/Desktop/covid19/"
+
+# Required packages
 library(tidyverse)
 library(lubridate)
-covid19.dir <- "~/Desktop/covid19/"
-setwd(covid19.dir)
 
 get.data <- function(download=FALSE){
   # Download the current data
@@ -79,10 +80,12 @@ plot.data <- function(plotdata,title="Plot"){
     ylab("New Daily Cases") +
     xlab("Date") +
     ggtitle(title) +
-    geom_smooth(aes(date,cases.7day.mean),stat="identity",color="red",na.rm=TRUE) +
-    geom_smooth(aes(date,cases.3day.mean),stat="identity",color="mediumpurple3",na.rm=TRUE) +
+    geom_smooth(aes(date,cases.7day.mean,color="7-day average"),stat="identity",na.rm=TRUE) +
+    geom_smooth(aes(date,cases.3day.mean,color="3-day average"),stat="identity",na.rm=TRUE) +
     scale_x_date(date_labels = "%b %d") +
-    scale_color_discrete(name = "Y series", labels = c("7-day average"))
+    scale_color_manual(name="",values=c("mediumpurple3","red")) +
+    theme(legend.pos="bottom",
+          legend.key = element_rect(fill = "white"))
 }
 
 # Check if new data needs to be downloaded (is it older than today?)
