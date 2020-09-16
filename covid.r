@@ -79,7 +79,7 @@ plot.data <- function(plotdata,title="Plot"){
     geom_bar(stat="identity",fill="steelblue2") +
     ylab("New Daily Cases") +
     xlab("Date") +
-    ggtitle(title) +
+    ggtitle(paste(title, "-- Data as of",format(Sys.Date(), format="%B %d, %Y"))) +
     geom_smooth(aes(date,cases.7day.mean,color="7-day average"),stat="identity",na.rm=TRUE) +
     geom_smooth(aes(date,cases.3day.mean,color="3-day average"),stat="identity",na.rm=TRUE) +
     scale_x_date(date_labels = "%b %d") +
