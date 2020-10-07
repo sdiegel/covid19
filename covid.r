@@ -31,6 +31,71 @@ capwords <- function(s, strict = FALSE) {
   sapply(strsplit(s, split = " "), cap, USE.NAMES = !is.null(names(s)))
 }
 
+conv.state.code <- function(code){
+  state.codes <- c("AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL",
+                   "GA","GU","HI","ID","IL","IN","IA","KS","KY","LA",
+                   "ME","MD","MA","MI","MN","MS","MO","MT","NE","NV",
+                   "NH","NJ","NM","NY","NC","ND","MP","OH","OK","OR",
+                   "PA","PR","RI","SC","SD","TN","TX","UT","VT","VI",
+                   "VA","WA","WV","WI","WY")
+  state.names <- c("Alabama",
+                   "Alaska",
+                   "Arizona",
+                   "Arkansas",
+                   "California",
+                   "Colorado",
+                   "Connecticut",
+                   "Delaware",
+                   "District of Columbia",
+                   "Florida",
+                   "Georgia",
+                   "Guam",
+                   "Hawaii",
+                   "Idaho",
+                   "Illinois",
+                   "Indiana",
+                   "Iowa",
+                   "Kansas",
+                   "Kentucky",
+                   "Louisiana",
+                   "Maine",
+                   "Maryland",
+                   "Massachusetts",
+                   "Michigan",
+                   "Minnesota",
+                   "Mississippi",
+                   "Missouri",
+                   "Montana",
+                   "Nebraska",
+                   "Nevada",
+                   "New Hampshire",
+                   "New Jersey",
+                   "New Mexico",
+                   "New York",
+                   "North Carolina",
+                   "North Dakota",
+                   "Northern Mariana Islands",
+                   "Ohio",
+                   "Oklahoma",
+                   "Oregon",
+                   "Pennsylvania",
+                   "Puerto Rico",
+                   "Rhode Island",
+                   "South Carolina",
+                   "South Dakota",
+                   "Tennessee",
+                   "Texas",
+                   "Utah",
+                   "Vermont",
+                   "Virgin Islands",
+                   "Virginia",
+                   "Washington",
+                   "West Virginia",
+                   "Wisconsin",
+                   "Wyoming")
+  state.name <- state.names[which(state.codes==code)]
+}
+
 calc.data <- function(cdata){
   n.rows <- dim(cdata)[1]
   cases.new <- deaths.new <- rep(0,n.rows)
@@ -99,18 +164,20 @@ data.check <- function(){
 }
 
 plot.state <- function(state.name){
-  State.name <- capwords(state.name)
+  State.name <- if (nchar(str_trim(state.name))==2) conv.state.code(toupper(state.name)) else capwords(state.name)
   data.check()
   plot.data(covid19.state[covid19.state$state==State.name,],State.name)
 }
 
 plot.county <- function(county.name,state.name){
   County.name <- capwords(county.name)
-  State.name <- capwords(state.name)
+  State.name <- if (nchar(str_trim(state.name))==2) conv.state.code(toupper(state.name)) else capwords(state.name)
   data.check()
   plot.data(covid19.county[covid19.county$state==State.name & covid19.county$county==County.name,],paste0(County.name," County, ",State.name))
 }
 
 ### USAGE Examples
-#plot.state("Wisconsin")
+#plot.state("Wisconsin")   
+#plot.state("WI")
 #plot.county("Dane","Wisconsin")
+#plot.county("dane","wi)
